@@ -1,0 +1,158 @@
+
+<div id="confirm-area">
+    <div class="unlock-box">
+
+        <p> Provide password to unlock </p>
+
+        <input type="password" name="unlock-pass" class="add-input" id="unlock-pass"/>
+
+        <p id="pass-error"></p>
+
+        <div class="options">
+            <button class="confirm-button sub" onclick="confirm()"> Unlock </button>
+            <button class="confirm-button cancel" onclick="back()"> Cancel </button> 
+        </div>
+
+    </div>
+</div>
+
+
+<div class="content">
+
+    <div class="row-aligner">
+
+        <div id="tools">
+
+            <div id="title-area"> Crypto PASS </div>
+            
+            
+           
+            <% if (error) { %>
+            <button id="add-con" class="tool-button" onclick="createContainer()"> <img src="./imgs/tools/plus.png" class="tool-img img-rot" id="add-img" /> Add Container </button>
+            <div class="add-tools-hider tool-reveal" id="hider">
+            <% }else{ %>
+            <button id="add-con" class="tool-button" onclick="createContainer()"> <img src="./imgs/tools/plus.png" class="tool-img" id="add-img" /> Add Container </button>
+            <div class="add-tools-hider" id="hider">
+            <% } %>
+
+                <form action='/subCon' method="POST" class="add-tools">
+                        
+                    <div class="input-line"> <label> Container Name </label> <input name="name" class="add-input" /> </div>
+           
+                    <div class="input-line"> <label> Password </label> <input type="password" name="passwd" class="add-input" /> </div>
+            
+                    <div class="input-line"> <label> Retype password </label> <input type="password" name="repasswd" class="add-input" /> </div>
+                    
+                    <p id="error"> <%= error %> </p>
+            
+                    <div id="action-bar"> <input type="submit" value="Accept" class="action-button sub"/> </div>
+                </form>
+            </div>
+
+            <button id="help" class="tool-button">    <img src="./imgs/tools/help.png" class="tool-img"/> Help </button>
+
+        </div>
+
+        <div id='containers-box'>
+
+            
+            <% containers.forEach((con) => {  %>
+                
+                <div class='pass-container' onclick="openContainer('<%= con.id %>')">
+                    <div class="container-side side-left">
+
+                        <% if (con.locked) { %>
+                            <img class="locker" src='./imgs/lock/closed_lock.png' id="<%= con.id %>-LOCKED" />
+                        <% } else { %>
+                            <img class="locker" src='./imgs/lock/opened_lock.png' id="<%= con.id %>-UNLOCKED" />
+                        <% } %>
+
+                        <div class='con-title'>  <%= con.name %> </div>
+                    </div>
+
+                    <div class="container-side side-right">
+                        <div class='con-time'>  <%= con.dateConvert(con.last_open) %> </div>
+                        <div class='con-count'>  <%= con.count %> </div>
+                    </div>
+
+                </div>
+            
+            <% }); %>
+            
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    function openContainer(ID){
+
+        fetch('/unlockCon', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},  
+            
+            body: JSON.stringify({ID: ID})
+        }).then(() => { 
+
+            let IS_ID = ID + '-UNLOCKED';
+
+            if(document.getElementById(IS_ID)) window.location = '/authorizedOpen'; 
+            else document.getElementById('confirm-area').style.display = 'flex';       
+        });
+    }
+
+
+    function createContainer(){
+
+        document.getElementById("add-con").onclick = hideTab;
+
+        document.getElementById("add-img").classList.add('img-rot');
+
+        document.getElementById("hider").classList.remove("tool-hide");
+        document.getElementById("hider").classList.add("tool-reveal");
+
+        document.getElementById("hider").style.display = 'flex';
+    }
+
+    function hideTab(){
+
+        document.getElementById('error').innerHTML = '';
+
+        document.getElementById("add-con").onclick = createContainer;
+
+        document.getElementById("add-img").classList.remove('img-rot');
+
+        document.getElementById("hider").classList.remove("tool-reveal"); 
+        document.getElementById("hider").classList.add("tool-hide");
+
+        setTimeout(() => { document.getElementById("hider").style.display = 'none'; }, 1250);  
+    }
+
+    function back(){ 
+
+        document.getElementById('pass-error').innerHTML = '';
+        document.getElementById('unlock-pass').value = '';
+        document.getElementById('confirm-area').style.display = 'none'; 
+    }
+
+    function confirm() {
+
+        let pass = document.getElementById('unlock-pass').value;
+
+        fetch('/authorize', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},  
+
+            body: JSON.stringify({pass: pass})
+            
+        }).then(response => response.json()).then(data => {
+
+            if(data.err == 'INCP') document.getElementById('pass-error').innerHTML = 'Password is incorrect';
+            else window.location = '/authorizedOpen'; 
+        })
+    }
+
+</script>

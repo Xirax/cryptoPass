@@ -1,0 +1,131 @@
+
+#confirm-area{
+
+    width: 100%;
+    height: 100vh;
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    z-index: 100;
+
+    backdrop-filter: blur(8px);
+
+    overflow: hidden;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.confirm-box{
+
+    background-color: #1E1E1E; 
+
+    width: 240px;
+    height: 160px;
+
+    border-radius: 3px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}
+
+#caution-message{
+
+    width: 200px;
+    text-align: center;
+}
+
+.unlock-box{
+
+    background-color: #1E1E1E;
+
+    width: 350px;
+    height: 250px;
+
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}
+
+#info-box{
+
+    width: 150px;
+    height: 30px;
+
+    background-color: #3B3B3B;
+
+    position: absolute;
+    display: none;
+
+    color: white; 
+
+    text-align: center;
+    line-height: 30px;
+}
+
+.fade-out{
+
+    animation-name: fade-out;
+    animation-duration: 2.5s;
+    animation-fill-mode: forwards;
+
+    opacity: 1;
+}
+
+.options{
+
+    margin-top: auto;
+
+    width: 100%;
+    height: 20%;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.confirm-button{
+    width: 50%;
+    border: none;
+}
+
+.del{
+    border-radius: 0 0 0 8px;
+    background-color: #783C3F;
+}
+
+.del:hover{ background-color: #9B2C2E; }
+
+.back{
+    border-radius: 0 0 8px 0;
+    background-color: #78893F;
+}
+
+.back:hover{  background-color: #9B9F2E; }
+
+.unlock{ 
+    border-radius: 0 0 0 8px;
+    background-color:#00b359; 
+}
+
+.unlock:hover{ background-color:#00e673; }
+
+
+
+
+@keyframes fade-out{
+
+    0%{ opacity: 1; }
+    100%{ opacity: 0; }
+}
